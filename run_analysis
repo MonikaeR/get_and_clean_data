@@ -1,0 +1,47 @@
+library(dplyr)
+
+dir1 <- ("./test")
+test_files <- dir(dir1, pattern = ".txt$", full.names = TRUE)
+test_set <- do.call(cbind, lapply(test_files, read.table))
+
+dir2 <- ("./train")
+train_files <- dir(dir2, pattern = ".txt$", full.names = TRUE)
+train_set <- do.call(cbind, lapply(train_files, read.table))
+
+set <- rbind(test_set, train_set)
+
+features <- read.table("./features.txt") 
+f <- unlist(features$V2)
+f <- f %>% gsub(",", "_", .) %>% gsub("-", "_", .) %>% gsub("\\()$", "", .)%>% gsub("\\(", "_", .)%>% gsub("\\)", "_", .) 
+
+names(set) <- c("subject", c(f), "activity_label")
+
+subject_activity <- set[ , c("subject", "activity_label")]
+mean_and_std <- set[ , grepl({"_mean_"}, names(set)) | grepl({"_mean$"}, names(set)) | grepl({"_std(_?)"}, names(set))]
+all <- cbind(subject_activity, mean_and_std)
+
+
+a1 <- all %>% filter(activity_label == 1) %>% mutate(activity_name = "WALKING")
+a2 <- all %>% filter(activity_label == 2) %>% mutate(activity_name = "WALKING_UPSTAIRS")
+a3 <- all %>% filter(activity_label == 3) %>% mutate(activity_name = "WALKING_DOWNSTAIRS")
+a4 <- all %>% filter(activity_label == 4) %>% mutate(activity_name = "SITTING")
+a5 <- all %>% filter(activity_label == 5) %>% mutate(activity_name = "STANDING")
+a6 <- all %>% filter(activity_label == 6) %>% mutate(activity_name = "LAYING")
+clean_set <- rbind(a1, a2, a3, a4, a5, a6)%>% select(c(1,2,69, 3:68))%>% arrange(subject, activity_label)
+means <- clean_set %>% select(-activity_name)
+
+by_subject <- split(means, means$subject)%>% lapply(colMeans)%>% tbl_df
+by_activity <- split(means, means$activity_label)%>%lapply(colMeans)%>% tbl_df
+
+tidy_set <- cbind(by_activity, by_subject)
+tidy_set <- tidy_set[3:68, ]
+
+rn <- names(mean_and_std)
+row.names(tidy_set) <- rn
+
+y = c("WALKING", "WALKING_UPSTAIRS", "WALKING_DOWNSTAIRS", "SITTING", "STANDING","LAYING")
+names_activity <- paste("average_for_", c(y))
+x <- c(1:30)
+names_subject <- paste("average_for_subject_", c(x))
+names(tidy_set) <- c(names_activity, names_subject)
+View(tidy_set)
