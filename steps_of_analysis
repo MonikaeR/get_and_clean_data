@@ -1,0 +1,16 @@
+My code works as described below:
+
+1. Bind files of test set and train test respectively.
+2. Bind two set into one set.
+3. Clean names of features.
+4. Create names of columns in set.
+5. Subset columns with data of subject and activity name.
+6. Subset columns with variables mean and standard deviation.
+7. Bind subsets form steps 5 and 6 into one table.
+8. Add column with name of activity by filtering rows for each activity and mutating column activity_label for 
+each activity respectively. After binding columns and rows are ordered.
+9. Split set by subject and calculate mean for each column.
+10. Split set by subject and calculate mean for each column.
+11.Bind sets from steps 9 and 10 and remove 2 rows with mean for subject's label and activity's label
+11. Create row names for tidy set(these are columns names in table in step 6).
+12. Create column names for tidy set.
