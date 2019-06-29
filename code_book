@@ -1,6 +1,8 @@
 A dataset that is created by code contains an average values of measurements - either mean or standard deviation (std) 
 for each measured signal for each of six tested activities (columns 1-6) and for every subject who took part in tests 
 (30 subjects, columns 7-36)
+
+There are measurements for following signals in rows:
  
 "1" "tBodyAcc_mean___X"
 "2" "tBodyAcc_mean___Y"
@@ -69,6 +71,6 @@ for each measured signal for each of six tested activities (columns 1-6) and for
 "65" "fBodyBodyGyroJerkMag_mean"
 "66" "fBodyBodyGyroJerkMag_std"
 
-"t" stands for time domain and 
+"t" stands for time domain signal
 "f" stands for frequency domain signal
 letters X,Y,Z denote signal directions
